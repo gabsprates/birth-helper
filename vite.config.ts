@@ -4,6 +4,8 @@ import solid from "vite-plugin-solid";
 export default defineConfig({
     plugins: [solid()],
 
+    base: "/birth-helper/",
+
     build: {
         outDir: "docs",
     },
