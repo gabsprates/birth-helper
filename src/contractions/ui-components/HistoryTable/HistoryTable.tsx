@@ -1,6 +1,8 @@
 import { Accessor, For } from "solid-js";
 import { Contraction } from "../../entities/Contraction";
 
+import "./styles.css";
+
 interface HistoryTableProps {
     contractions: Accessor<Contraction[]>;
 }
@@ -28,13 +30,7 @@ const showFormatterDateTime = (date: Date) => {
 
 export const HistoryTable = ({ contractions }: HistoryTableProps) => {
     return (
-        <table
-            style={{
-                border: "1px solid",
-                "border-collapse": "collapse",
-                width: "100%",
-            }}
-        >
+        <table class="history-table">
             <thead>
                 <tr>
                     <th>start time</th>
