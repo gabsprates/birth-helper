@@ -20,7 +20,10 @@ function App() {
 
         if (!contraction) return;
 
-        contraction.endContraction({ endTime: new Date() });
+        contraction.endContraction({
+            endTime: new Date(),
+            lastContraction: contractions()[0] || null,
+        });
 
         setContractions([contraction, ...contractions()]);
         setCurrentContraction(null);
