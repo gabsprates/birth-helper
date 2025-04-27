@@ -1,30 +1,28 @@
-import { createSignal, For, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import "./App.css";
-import { Contraction } from "./domain/Contraction";
+import { Contraction } from "./contractions/entities/Contraction";
+import { HistoryTable } from "./contractions/ui-components/HistoryTable/HistoryTable";
+import { ContractionImpl } from "./contractions/entities/ContractionImpl";
 
 function App() {
+    const [contractions, setContractions] = createSignal<Contraction[]>([]);
     const [currentContraction, setCurrentContraction] =
         createSignal<Contraction | null>(null);
-    const [contractions, setContractions] = createSignal<Contraction[]>([]);
 
     const handleStartContraction = () => {
         console.log("start");
-        setCurrentContraction({ startTime: new Date() } as Contraction);
+        setCurrentContraction(new ContractionImpl(new Date()));
     };
 
     const handleStopContraction = () => {
         console.log("stop");
+        const contraction = currentContraction();
 
-        console.log(currentContraction());
+        if (!contraction) return;
 
-        setContractions((current) => [
-            ...current,
-            {
-                ...currentContraction(),
-                endTime: new Date(),
-            } as Contraction,
-        ]);
+        contraction.endContraction({ endTime: new Date() });
 
+        setContractions([contraction, ...contractions()]);
         setCurrentContraction(null);
     };
 
@@ -44,37 +42,7 @@ function App() {
                     <button onClick={handleStopContraction}>stop</button>
                 </Show>
 
-                <table
-                    style={{
-                        border: "1px solid",
-                        "border-collapse": "collapse",
-                    }}
-                >
-                    <thead>
-                        <tr>
-                            <th>start time</th>
-                            <th>end time</th>
-                            <th>duration</th>
-                            <th>frequency</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <For each={contractions()}>
-                            {(contraction, index) => {
-                                return (
-                                    <tr>
-                                        <td>
-                                            {contraction.startTime.toJSON()}
-                                        </td>
-                                        <td>{contraction.endTime?.toJSON()}</td>
-                                        <td>{index()}</td>
-                                        <td>{index()}</td>
-                                    </tr>
-                                );
-                            }}
-                        </For>
-                    </tbody>
-                </table>
+                <HistoryTable contractions={contractions} />
             </section>
         </>
     );
