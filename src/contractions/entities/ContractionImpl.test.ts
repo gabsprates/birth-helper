@@ -3,7 +3,7 @@ import { ContractionImpl } from "./ContractionImpl";
 describe("Entity: ContractionImpl", () => {
     it("should create a new contraction with start time as given date", () => {
         const startTime = new Date();
-        const contraction = new ContractionImpl(startTime);
+        const contraction = new ContractionImpl({ startTime });
 
         expect(contraction.startTime).toBe(startTime);
     });
@@ -11,7 +11,7 @@ describe("Entity: ContractionImpl", () => {
     it("should end contraction with endtime as given date", () => {
         const startTime = new Date();
         const endTime = new Date();
-        const contraction = new ContractionImpl(startTime);
+        const contraction = new ContractionImpl({ startTime });
 
         contraction.endContraction({ endTime, lastContraction: null });
 
@@ -21,7 +21,7 @@ describe("Entity: ContractionImpl", () => {
     it("should have a duration after contraction ends", () => {
         const startTime = new Date(2025, 0, 0, 0, 0, 0, 0);
         const endTime = new Date(2025, 0, 0, 0, 10, 0, 0);
-        const contraction = new ContractionImpl(startTime);
+        const contraction = new ContractionImpl({ startTime });
 
         contraction.endContraction({ endTime, lastContraction: null });
 
@@ -33,7 +33,9 @@ describe("Entity: ContractionImpl", () => {
     it("should have a frequency after contraction ends and a last contraction was given", () => {
         const lastContractionStartTime = new Date(2025, 0, 0, 0, 0, 0, 0);
         const lastContractionEndTime = new Date(2025, 0, 0, 0, 10, 0, 0);
-        const lastContraction = new ContractionImpl(lastContractionStartTime);
+        const lastContraction = new ContractionImpl({
+            startTime: lastContractionStartTime,
+        });
         lastContraction.endContraction({
             endTime: lastContractionEndTime,
             lastContraction: null,
@@ -41,7 +43,7 @@ describe("Entity: ContractionImpl", () => {
 
         const startTime = new Date(2025, 0, 0, 0, 30, 0, 0);
         const endTime = new Date(2025, 0, 0, 0, 40, 0, 0);
-        const contraction = new ContractionImpl(startTime);
+        const contraction = new ContractionImpl({ startTime });
 
         contraction.endContraction({ endTime, lastContraction });
 

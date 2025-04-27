@@ -1,9 +1,10 @@
-import { createSignal, Show } from "solid-js";
+import { createSignal, onMount, Show } from "solid-js";
 import "./App.css";
 import { Contraction } from "./contractions/entities/Contraction";
 import { HistoryTable } from "./contractions/ui-components/HistoryTable/HistoryTable";
 import { ContractionImpl } from "./contractions/entities/ContractionImpl";
 import { Stopwatch } from "./contractions/entities/Stopwatch";
+import { Store } from "./store/Store";
 
 function App() {
     const stopwatch = new Stopwatch("stopwatch");
@@ -12,14 +13,35 @@ function App() {
     const [currentContraction, setCurrentContraction] =
         createSignal<Contraction | null>(null);
 
+    onMount(() => {
+        type DataType = Pick<
+            Contraction,
+            "startTime" | "endTime" | "duration" | "frequency"
+        >;
+
+        const data = Store.getData<DataType>();
+
+        setContractions(
+            data.map(
+                (contraction) =>
+                    new ContractionImpl({
+                        startTime: new Date(contraction.startTime),
+                        endTime: contraction.endTime
+                            ? new Date(contraction.endTime)
+                            : null,
+                        duration: contraction.duration,
+                        frequency: contraction.frequency,
+                    })
+            )
+        );
+    });
+
     const handleStartContraction = () => {
-        console.log("start");
         stopwatch.start();
-        setCurrentContraction(new ContractionImpl(new Date()));
+        setCurrentContraction(new ContractionImpl({ startTime: new Date() }));
     };
 
     const handleStopContraction = () => {
-        console.log("stop");
         stopwatch.reset();
         const endTime = new Date();
 
@@ -32,7 +54,16 @@ function App() {
             lastContraction: contractions()[0] || null,
         });
 
-        setContractions([contraction, ...contractions()]);
+        const newContractions = [contraction, ...contractions()];
+
+        setContractions(newContractions);
+        setCurrentContraction(null);
+        Store.saveData(newContractions);
+    };
+
+    const handleClearHistory = () => {
+        Store.clearData();
+        setContractions([]);
         setCurrentContraction(null);
     };
 
@@ -49,9 +80,20 @@ function App() {
                     <Show
                         when={currentContraction() !== null}
                         fallback={
-                            <button onClick={handleStartContraction}>
-                                start
-                            </button>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    "justify-content": "center",
+                                    gap: "1rem",
+                                }}
+                            >
+                                <button onClick={handleStartContraction}>
+                                    start
+                                </button>
+                                <button onClick={handleClearHistory}>
+                                    clear history
+                                </button>
+                            </div>
                         }
                     >
                         <button onClick={handleStopContraction}>stop</button>

@@ -11,6 +11,8 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    --table-row-even-color: #213547;
 }
 
 a {
@@ -58,6 +60,7 @@ button:focus-visible {
     :root {
         color: #213547;
         background-color: #ffffff;
+        --table-row-even-color: #213547;
     }
     a:hover {
         color: #747bff;

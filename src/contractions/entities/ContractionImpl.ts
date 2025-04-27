@@ -1,13 +1,23 @@
 import { Contraction, EndContractionParams } from "./Contraction";
 
+interface ContractionImplParams {
+    startTime: Date;
+    endTime?: Date | null;
+    duration?: number | null;
+    frequency?: number | null;
+}
+
 export class ContractionImpl implements Contraction {
     startTime: Date;
-    endTime: Date | null = null;
-    duration: number | null = null;
-    frequency: number | null = null;
+    endTime: Date | null;
+    duration: number | null;
+    frequency: number | null;
 
-    constructor(startTime: Date) {
-        this.startTime = startTime;
+    constructor(params: ContractionImplParams) {
+        this.startTime = params.startTime;
+        this.endTime = params.endTime || null;
+        this.duration = params.duration || null;
+        this.frequency = params.frequency || null;
     }
 
     endContraction({ endTime, lastContraction }: EndContractionParams): void {
