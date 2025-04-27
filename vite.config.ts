@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 
@@ -8,5 +10,11 @@ export default defineConfig({
 
     build: {
         outDir: "docs",
+    },
+
+    test: {
+        globals: true,
+        environment: "jsdom",
+        setupFiles: ["./testSetup.ts"],
     },
 });
