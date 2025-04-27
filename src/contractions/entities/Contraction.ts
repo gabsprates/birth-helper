@@ -9,4 +9,5 @@ export interface Contraction {
 
 export interface EndContractionParams {
     endTime: Date;
+    lastContraction: null | Contraction;
 }

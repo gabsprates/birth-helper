@@ -10,9 +10,14 @@ export class ContractionImpl implements Contraction {
         this.startTime = startTime;
     }
 
-    endContraction({ endTime }: EndContractionParams): void {
+    endContraction({ endTime, lastContraction }: EndContractionParams): void {
         this.endTime = endTime;
 
         this.duration = endTime.getTime() - this.startTime.getTime();
+
+        if (lastContraction?.endTime) {
+            this.frequency =
+                this.startTime.getTime() - lastContraction.startTime.getTime();
+        }
     }
 }
