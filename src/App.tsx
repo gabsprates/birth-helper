@@ -72,7 +72,7 @@ function App() {
             <h1>Birth Helper 👶</h1>
 
             <section class="card">
-                <h2>🤰⏲ labor contractions</h2>
+                <h2>🤰 labor contractions ⏲</h2>
 
                 <div>
                     <h3 id="stopwatch">00:00:00.0</h3>
