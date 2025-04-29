@@ -67,14 +67,18 @@ function App() {
         setCurrentContraction(null);
     };
 
+    const handleDownload = () => {
+        window.print();
+    };
+
     return (
         <>
-            <h1>Birth Helper 👶</h1>
+            <h1 class="hide-print">Birth Helper 👶</h1>
 
             <section class="card">
-                <h2>🤰 labor contractions ⏲</h2>
+                <h2>🤰 Labor Contractions ⏲</h2>
 
-                <div>
+                <div class="hide-print">
                     <h3 id="stopwatch">00:00:00.0</h3>
 
                     <Show
@@ -90,8 +94,8 @@ function App() {
                                 <button onClick={handleStartContraction}>
                                     start
                                 </button>
-                                <button onClick={handleClearHistory}>
-                                    clear history
+                                <button onClick={handleDownload}>
+                                    download
                                 </button>
                             </div>
                         }
@@ -101,6 +105,19 @@ function App() {
                 </div>
 
                 <HistoryTable contractions={contractions} />
+
+                <Show when={currentContraction() === null}>
+                    <div
+                        class="hide-print"
+                        style={{
+                            "margin-top": "20rem",
+                        }}
+                    >
+                        <button onClick={handleClearHistory}>
+                            clear history
+                        </button>
+                    </div>
+                </Show>
             </section>
         </>
     );
