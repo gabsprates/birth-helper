@@ -62,6 +62,10 @@ function App() {
     };
 
     const handleClearHistory = () => {
+        const wantClear = window.confirm("really want to delete data?");
+
+        if (!wantClear) return;
+
         Store.clearData();
         setContractions([]);
         setCurrentContraction(null);
