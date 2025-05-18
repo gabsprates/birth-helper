@@ -4,36 +4,24 @@ import { Contraction } from "./contractions/entities/Contraction";
 import { HistoryTable } from "./contractions/ui-components/HistoryTable/HistoryTable";
 import { ContractionImpl } from "./contractions/entities/ContractionImpl";
 import { Stopwatch } from "./contractions/entities/Stopwatch";
-import { Store } from "./store/Store";
+import { AppStorage } from "./store/AppStorage";
+import { ContractionsStorageImpl } from "./contractions/entities/ContractionsStorageImpl";
 
-function App() {
+interface AppProps {
+    appStorage: AppStorage;
+}
+
+function App({ appStorage }: AppProps) {
     const stopwatch = new Stopwatch("stopwatch");
+    const contractionsStorage = new ContractionsStorageImpl(appStorage);
 
     const [contractions, setContractions] = createSignal<Contraction[]>([]);
     const [currentContraction, setCurrentContraction] =
         createSignal<Contraction | null>(null);
 
-    onMount(() => {
-        type DataType = Pick<
-            Contraction,
-            "startTime" | "endTime" | "duration" | "frequency"
-        >;
-
-        const data = Store.getData<DataType>();
-
-        setContractions(
-            data.map(
-                (contraction) =>
-                    new ContractionImpl({
-                        startTime: new Date(contraction.startTime),
-                        endTime: contraction.endTime
-                            ? new Date(contraction.endTime)
-                            : null,
-                        duration: contraction.duration,
-                        frequency: contraction.frequency,
-                    })
-            )
-        );
+    onMount(async () => {
+        const data = await contractionsStorage.getContractions();
+        setContractions(data);
     });
 
     const handleStartContraction = () => {
@@ -58,7 +46,10 @@ function App() {
 
         setContractions(newContractions);
         setCurrentContraction(null);
-        Store.saveData(newContractions);
+
+        contractionsStorage
+            .saveContractions(newContractions)
+            .catch(console.error);
     };
 
     const handleClearHistory = () => {
@@ -66,9 +57,10 @@ function App() {
 
         if (!wantClear) return;
 
-        Store.clearData();
         setContractions([]);
         setCurrentContraction(null);
+
+        contractionsStorage.clearContractions().catch(console.error);
     };
 
     const handleDownload = () => {
