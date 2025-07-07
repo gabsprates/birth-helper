@@ -49,6 +49,11 @@ export default defineConfig({
         outDir: "docs",
     },
 
+    server: {
+        port: 5173,
+        host: "0.0.0.0",
+    },
+
     test: {
         globals: true,
         environment: "jsdom",
