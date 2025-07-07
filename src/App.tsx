@@ -69,7 +69,7 @@ function App({ appStorage }: AppProps) {
 
     return (
         <>
-            <h1 class="hide-print">Birth Helper 👶</h1>
+            <h1 class="hide-print text-3xl font-bold">Birth Helper 👶</h1>
 
             <section class="card">
                 <h2>🤰 Labor Contractions ⏲</h2>

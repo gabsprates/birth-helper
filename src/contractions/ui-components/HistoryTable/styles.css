@@ -1,8 +1,12 @@
+@reference "../../../index.css";
+
 .history-table {
-    border: 1px solid;
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 1rem;
+    @apply table;
+    @apply border-2;
+    @apply border-collapse;
+    @apply w-full;
+    @apply max-w-3xl;
+    @apply mt-4;
 }
 
 .history-table thead {
